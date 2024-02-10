@@ -25,6 +25,6 @@ options:
 
 ## Example
 ```bash
-python ScreenTime2CSV.py -o output.csv
+python screentime2csv.py -o output.csv
 ```
 This command will export Screen Time data to output.csv using comma as the delimiter.
