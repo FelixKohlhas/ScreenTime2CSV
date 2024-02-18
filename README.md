@@ -28,3 +28,8 @@ options:
 python screentime2csv.py -o output.csv
 ```
 This command will export Screen Time data to output.csv using comma as the delimiter.
+
+```bash
+python3 screentime2csv.py -o output.tsv -d '\t'
+```
+This command will export Screen Time data to output.tsv using tabs as the delimiter.
