@@ -54,6 +54,11 @@ def query_database():
         # Fetch all rows from the result set
         return cur.fetchall()
 
+def write_to_csv(rows, output, delimiter):
+    writer = csv.writer(output, delimiter=delimiter, quoting=csv.QUOTE_MINIMAL)
+    writer.writerow(["app", "usage", "start_time", "end_time", "created_at", "tz", "device_id", "device_model"])
+    writer.writerows(rows)
+
 def main():
     parser = argparse.ArgumentParser(description="Query knowledge database")
     parser.add_argument("-o", "--output", help="Output file path (default: stdout)")
@@ -69,14 +74,10 @@ def main():
     # Write the output to a file or print to stdout
     if args.output:
         with open(args.output, "w", newline='') as f:
-            writer = csv.writer(f, delimiter=delimiter, quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(["app", "usage", "start_time", "end_time", "created_at", "tz", "device_id", "device_model"])
-            writer.writerows(rows)
+            write_to_csv(rows, f, delimiter)
     else:
         output = StringIO()
-        writer = csv.writer(output, delimiter=delimiter, quoting=csv.QUOTE_MINIMAL)
-        writer.writerow(["app", "usage", "start_time", "end_time", "created_at", "tz", "device_id", "device_model"])
-        writer.writerows(rows)
+        write_to_csv(rows, output, delimiter)
         print(output.getvalue())
 
 if __name__ == "__main__":
