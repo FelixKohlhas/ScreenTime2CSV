@@ -56,7 +56,7 @@ def query_database():
 
 def main():
     parser = argparse.ArgumentParser(description="Query knowledge database")
-    parser.add_argument("-o", "--output", help="Output file path")
+    parser.add_argument("-o", "--output", help="Output file path (default: stdout)")
     parser.add_argument("-d", "--delimiter", default=',', help="Delimiter for output file (default: comma)")
     args = parser.parse_args()
 
@@ -64,7 +64,7 @@ def main():
     rows = query_database()
 
     # Prepare output format
-    delimiter = args.delimiter
+    delimiter = args.delimiter.replace("\\t", "\t")
     
     # Write the output to a file or print to stdout
     if args.output:
