@@ -7,11 +7,22 @@ from io import StringIO
 knowledge_db = os.path.expanduser("~/Library/Application Support/Knowledge/knowledgeC.db")
 
 def query_database(last_created_at):
+    # Check if knowledgeC.db exists
+    if not os.path.exists(knowledge_db):
+        print("Could not find knowledgeC.db at %s." % (knowledge_db))
+        exit(1)
+
+    # Check if knowledgeC.db is readable
+    if not os.access(knowledge_db, os.R_OK):
+        print("The knowledgeC.db at %s is not readable.\nPlease grant full disk access to the application running the script (e.g. Terminal, iTerm, VSCode etc.)." % (knowledge_db))
+        exit(1)
+
     # Connect to the SQLite database
     with sqlite3.connect(knowledge_db) as con:
         cur = con.cursor()
 
         # Execute the SQL query to fetch data
+        # Modified from https://rud.is/b/2019/10/28/spelunking-macos-screentime-app-usage-with-r/
         query = """
         SELECT
             ZOBJECT.ZVALUESTRING AS "app",
