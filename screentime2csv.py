@@ -69,12 +69,17 @@ def main():
     # Prepare output format
     delimiter = args.delimiter.replace("\\t", "\t")
 
-    # Check if file exists to decide whether to write headers
-    file_exists = os.path.isfile(args.output)
-    last_created_at_file = args.output + ".last"
-    if os.path.isfile(last_created_at_file):
-        with open(last_created_at_file, "r") as f:
-            last_created_at = float(f.read().strip())
+    # Incremental state only applies when appending to an output file;
+    # stdout always gets the full dataset.
+    if args.output:
+        # Check if file exists to decide whether to write headers
+        file_exists = os.path.isfile(args.output)
+        last_created_at_file = args.output + ".last"
+        if os.path.isfile(last_created_at_file):
+            with open(last_created_at_file, "r") as f:
+                last_created_at = float(f.read().strip())
+        else:
+            last_created_at = 0.0
     else:
         last_created_at = 0.0
 
@@ -82,7 +87,7 @@ def main():
     rows = query_database(last_created_at)
 
     # Update the last created at time
-    if rows:
+    if args.output and rows:
         with open(last_created_at_file, "w") as f:
             f.write(str(rows[0][4]))  # rows[0][4] is the "created_at" of the first row
 
